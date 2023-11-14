@@ -17,18 +17,22 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Trash } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useRouter } from 'next/navigation';
 
 interface MenuProps {
   documentId: Id<'documents'>;
 }
 
 const Menu = ({ documentId }: MenuProps) => {
+  const router = useRouter();
   const { user } = useUser();
 
   const archive = useMutation(api.documents.archive);
 
   const onArchive = () => {
-    const promise = archive({ id: documentId });
+    const promise = archive({ id: documentId }).then(() => {
+      router.push('/documents');
+    });
 
     toast.promise(promise, {
       loading: 'Moving to trash...',
